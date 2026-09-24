@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #Coded by L330n123
-#Translated to Russian, updated banner & built-in proxy.txt by DIDO
+#Updated banner (color CC), built-in proxy sources, Russian language by DIDO
 #########################################
 #         Just a little change          #
 #                           -- L330n123 #
@@ -18,44 +18,100 @@ import os
 
 
 
-print(r'''
-        ╔══════════════════════════════════════════════════════╗
-        ║                                                      ║
-        ║                ██████╗ ██████╗                      ║
-        ║               ██╔════╝██╔════╝                      ║
-        ║               ██║     ██║                           ║
-        ║               ██║     ██║                           ║
-        ║               ╚██████╗╚██████╗                      ║
-        ║                ╚═════╝ ╚═════╝                      ║
-        ║                                                      ║
-        ║        ⚡  C C - A T T A C K   L A Y E R 7  ⚡       ║
-        ║                                                      ║
-        ║                Версия 3.8.0 (2026/9/24)              ║
-        ║                       by DIDO                        ║
-        ║                                                      ║
-        ╠══════════════════════════════════════════════════════╣
-        ║      ⚠  Внимание: Не атакуйте .gov сайты  ⚠          ║
-        ╠══════════════════════════════════════════════════════╣
-        ║                     Новое:                           ║
-        ║          [+] Поддержка HTTP прокси                   ║
-        ║          [+] Оптимизация                             ║
-        ║          [+] Изменены имена переменных               ║
-        ║          [+] Добавлен русский язык                   ║
-        ║          [+] Встроенный список прокси                ║
-        ║          [+] Новый баннер (молния)                   ║
-        ╠══════════════════════════════════════════════════════╣
-        ║   Ссылка: https://github.com/Leeon123/CC-attack      ║
-        ╚══════════════════════════════════════════════════════╝
+# ANSI цвета
+RED = "\033[91m"
+BLUE = "\033[94m"
+GREEN = "\033[92m"
+RESET = "\033[0m"
+BOLD = "\033[1m"
 
-                    ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡  ⚡
+print(f'''
+        {BOLD}{RED}╔══════════════════════════════════════════════════════╗{RESET}
+        {BOLD}{RED}║{RESET}                                                      {BOLD}{RED}║{RESET}
+        {BOLD}{RED}║{RESET}                      {BOLD}{RED}<{RESET}{BOLD}{BLUE}C{RESET}{BOLD}{GREEN}C{RESET}{BOLD}{RED}>{RESET}                      {BOLD}{RED}║{RESET}
+        {BOLD}{RED}║{RESET}                                                      {BOLD}{RED}║{RESET}
+        {BOLD}{RED}║{RESET}                 Версия 3.8.0 (2026/9/24)             {BOLD}{RED}║{RESET}
+        {BOLD}{RED}║{RESET}                        by DIDO                       {BOLD}{RED}║{RESET}
+        {BOLD}{RED}║{RESET}                                                      {BOLD}{RED}║{RESET}
+        {BOLD}{RED}╚══════════════════════════════════════════════════════╝{RESET}
 ''')
 
-# Встроенный список прокси (если файл proxy.txt отсутствует)
-BUILTIN_PROXIES = [
-    "127.0.0.1:9050",  # Пример локального Tor прокси
-    "127.0.0.1:1080",  # Пример локального SOCKS5
-    "192.168.1.1:8080", # Пример локального HTTP прокси
-    # Добавьте свои прокси здесь
+# Встроенные ссылки на открытые API-источники прокси
+BUILTIN_PROXY_SOURCES = [
+    # SOCKS4
+    "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4",
+    "https://openproxylist.xyz/socks4.txt",
+    "https://proxyspace.pro/socks4.txt",
+    "https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/SOCKS4.txt",
+    "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt",
+    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks4.txt",
+    "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt",
+    "https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/socks4.txt",
+    "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks4.txt",
+    "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
+    "https://www.proxy-list.download/api/v1/get?type=socks4",
+    "https://www.proxyscan.io/download?type=socks4",
+    "https://api.proxyscrape.com/?request=displayproxies&proxytype=socks4&country=all",
+    "https://api.openproxylist.xyz/socks4.txt",
+
+    # SOCKS5
+    "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all&simplified=true",
+    "https://www.proxy-list.download/api/v1/get?type=socks5",
+    "https://www.proxyscan.io/download?type=socks5",
+    "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
+    "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+    "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks5.txt",
+    "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt",
+    "https://api.openproxylist.xyz/socks5.txt",
+    "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5",
+    "https://openproxylist.xyz/socks5.txt",
+    "https://proxyspace.pro/socks5.txt",
+    "https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/SOCKS5.txt",
+    "https://raw.githubusercontent.com/manuGMG/proxy-365/main/SOCKS5.txt",
+    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks5.txt",
+    "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
+    "https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/socks5.txt",
+
+    # HTTP/HTTPS
+    "https://api.proxyscrape.com/?request=displayproxies&proxytype=http",
+    "https://www.proxy-list.download/api/v1/get?type=http",
+    "https://www.proxyscan.io/download?type=http",
+    "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt",
+    "https://api.openproxylist.xyz/http.txt",
+    "https://raw.githubusercontent.com/shiftytr/proxy-list/master/proxy.txt",
+    "http://alexa.lr2b.com/proxylist.txt",
+    "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt",
+    "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
+    "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
+    "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt",
+    "https://proxy-spider.com/api/proxies.example.txt",
+    "https://multiproxy.org/txt_all/proxy.txt",
+    "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt",
+    "https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/http.txt",
+    "https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/https.txt",
+    "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http",
+    "https://openproxylist.xyz/http.txt",
+    "https://proxyspace.pro/http.txt",
+    "https://proxyspace.pro/https.txt",
+    "https://raw.githubusercontent.com/almroot/proxylist/master/list.txt",
+    "https://raw.githubusercontent.com/aslisk/proxyhttps/main/https.txt",
+    "https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/HTTP.txt",
+    "https://raw.githubusercontent.com/hendrikbgr/Free-Proxy-Repo/master/proxy_list.txt",
+    "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt",
+    "https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt",
+    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt",
+    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt",
+    "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/http.txt",
+    "https://raw.githubusercontent.com/RX4096/proxy-list/main/online/http.txt",
+    "https://raw.githubusercontent.com/RX4096/proxy-list/main/online/https.txt",
+    "https://raw.githubusercontent.com/saisuiu/uiu/main/free.txt",
+    "https://raw.githubusercontent.com/saschazesiger/Free-Proxies/master/proxies/http.txt",
+    "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt",
+    "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/https.txt",
+    "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
+    "https://rootjazz.com/proxies/proxies.txt",
+    "https://sheesh.rip/http.txt",
+    "https://www.proxy-list.download/api/v1/get?type=https",
 ]
 
 acceptall = [
@@ -737,10 +793,14 @@ def main():
 		DownloadProxies(proxy_ver)
 
 	if os.path.exists(out_file)!=True:
-		print("> Файл прокси не найден. Используем встроенный список.")
+		print("> Файл прокси не найден. Используем встроенные источники.")
 		with open(out_file, 'w') as f:
-			for p in BUILTIN_PROXIES:
-				f.write(p + "\n")
+			for src in BUILTIN_PROXY_SOURCES:
+				try:
+					r = requests.get(src, timeout=5)
+					f.write(r.text)
+				except:
+					pass
 	
 	proxies = open(out_file).readlines()	
 	check_list(out_file)
